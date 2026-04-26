@@ -29,15 +29,12 @@ export async function generateMetadata({
 
 export default async function CategoryPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ q?: string; sort?: string }>;
 }) {
   const { slug } = await params;
-  const resolvedSearch = await searchParams;
-  const query = resolvedSearch.q ?? "";
-  const sort = resolvedSearch.sort ?? "popular";
+  const query = "";
+  const sort = "popular";
   const items = filterCases({ category: slug, query, sort });
 
   if (!items.length && !query) {
@@ -62,10 +59,7 @@ export default async function CategoryPage({
                 当前分类页已支持搜索、排序与 URL 参数同步。适合继续往 SEO 聚合页和分类专题页演进。
               </p>
             </div>
-            <SearchBar
-              placeholder="在当前分类下继续搜索…"
-              basePath={`/category/${slug}`}
-            />
+            <SearchBar placeholder="在当前分类下继续搜索（静态演示版仅保留输入体验）…" />
           </div>
         </div>
 

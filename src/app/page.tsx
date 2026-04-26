@@ -17,14 +17,9 @@ import { TrendStrip } from "@/components/trend-strip";
 import { filterCases, getAllCases, getFeaturedCases, sortCases } from "@/lib/data";
 import { siteConfig } from "@/lib/site";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string; sort?: string }>;
-}) {
-  const params = await searchParams;
-  const query = params.q ?? "";
-  const sort = params.sort ?? "popular";
+export default function Home() {
+  const query = "";
+  const sort = "popular";
   const featured = getFeaturedCases();
   const allItems = getAllCases();
   const items = filterCases({ query, sort });

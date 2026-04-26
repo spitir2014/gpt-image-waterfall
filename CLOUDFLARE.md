@@ -1,95 +1,181 @@
-# Cloudflare 部署准备说明
+# Cloudflare 部署说明（静态导出版）
 
-本文档用于帮助你把当前项目部署到 Cloudflare Pages / Workers。
+本文档针对当前仓库 `spitir2014/gpt-image-waterfall` 的 **Cloudflare Pages 静态部署方案**。
 
-## 先说结论
+## 当前结论
 
-当前项目是标准 Next.js 16 应用，已经补充了第一轮 Cloudflare 部署准备：
+这个项目现在已经改造成可静态导出：
 
-- 增加了 Cloudflare 相关脚本
-- 调整了 `next.config.ts` 的图片配置
-- 保留了 `build:data` 这一步，确保部署前能生成站点数据
+- 使用 `Next.js 16`
+- 采用 `output: "export"`
+- 分类页与详情页均已静态化
+- `robots.txt` / `sitemap.xml` / `opengraph-image` 也已兼容静态导出
+- 本地 `npm run build` 已验证通过
 
-> 说明：这是一版“部署准备”，目的是让你更顺利地接入 Cloudflare。首次部署时，仍建议按照本文档一步一步操作并观察 Cloudflare 控制台日志。
+因此，Cloudflare 上**不再使用** `@cloudflare/next-on-pages`，直接按静态站点部署即可。
 
 ---
 
-## 当前新增脚本
+## 一、Cloudflare 中文界面应该怎么填
 
-在 `package.json` 中新增了：
+进入：
 
-```json
-{
-  "scripts": {
-    "build:prod": "npm run build:data && npm run build",
-    "cf:install": "npm install -D @cloudflare/next-on-pages wrangler",
-    "cf:build": "npm run build:data && npx @cloudflare/next-on-pages",
-    "cf:preview": "npx wrangler pages dev .vercel/output/static"
-  }
-}
+- **Workers 和 Pages**
+- **创建**
+- **Pages**
+- **连接到 Git**
+- 选择仓库：`spitir2014/gpt-image-waterfall`
+
+然后在配置页填写：
+
+### 项目名称
+
+```text
+gpt-image-waterfall
 ```
 
-用途分别是：
+### 生产分支
 
-- `build:prod`：标准生产构建
-- `cf:install`：安装 Cloudflare 部署依赖
-- `cf:build`：执行 Cloudflare 构建流程
-- `cf:preview`：本地预览 Cloudflare 构建产物
+```text
+main
+```
 
----
+### 框架预设
 
-## 第一次接入前你要知道
+如果有，就选：
 
-Cloudflare Pages 部署 Next.js 时，通常是：
+```text
+Next.js
+```
 
-1. 从 GitHub 拉代码
-2. 安装依赖
-3. 执行构建命令
-4. 产出 Pages/Workers 可运行结果
-5. 绑定 `*.pages.dev` 域名或你自己的域名
+如果没有，就保持默认也可以。
 
-对你这个项目，关键点在于：
-
-- 不能只 `next build`
-- 必须先执行 `npm run build:data`
-- 图片最好关闭 Next image 优化依赖，因此已配置：
-  - `images.unoptimized = true`
-
----
-
-## 推荐首次部署命令
-
-如果 Cloudflare 控制台需要你填写 Build Command，优先使用：
+### 构建命令
 
 ```bash
-npm install && npm run cf:install && npm run cf:build
+npm run build:data && npm run build
 ```
 
-如果后面你把 Cloudflare 依赖正式写入仓库并提交 lockfile，也可以简化。
+### 构建输出目录
+
+```text
+out
+```
+
+### 根目录
+
+```text
+留空
+```
+
+### 环境变量
+
+新增：
+
+变量名：
+
+```text
+NEXT_PUBLIC_SITE_URL
+```
+
+变量值：
+
+```text
+https://gpt-image-waterfall.pages.dev
+```
+
+> 后面如果你绑定正式域名，再把这个值改成正式域名。
 
 ---
 
-## 部署完成后要验证什么
+## 二、为什么现在用 `out`
 
-至少检查这些：
+因为当前项目已经切换为：
 
-- 首页是否正常打开
-- 分类页是否可访问
-- 详情页是否可访问
-- 图片是否正常显示
-- 收藏 / 最近浏览是否在浏览器里正常工作
-- `robots.txt` 是否正常
-- `sitemap.xml` 是否正常
+```ts
+output: "export"
+```
+
+Next.js 构建完成后会输出静态站点目录：
+
+```text
+out/
+```
+
+所以 Cloudflare 只需要把 `out/` 作为发布目录即可。
 
 ---
 
-## 如果 Cloudflare 首次构建失败
+## 三、为什么不再用 `next-on-pages`
 
-重点检查：
+原因很简单：
 
-1. Build Command 是否漏了 `build:data`
-2. Node 版本是否过低（建议 20）
-3. 是否成功安装了 `@cloudflare/next-on-pages`
-4. 是否存在 Cloudflare 对 Next 版本的兼容提示
+- `@cloudflare/next-on-pages` 当前不支持 `Next.js 16`
+- 你之前的报错就是依赖版本冲突导致的
+- 当前项目本身适合纯静态部署，所以没必要继续走那条路
 
-如果你把 Cloudflare 构建日志发给我，我可以继续直接帮你排查。
+---
+
+## 四、当前静态版的取舍
+
+为了先保证 Cloudflare 能稳定上线，我已经把站点调整为静态导出版，因此有一个取舍：
+
+### 当前保留
+- 首页
+- 分类页
+- 详情页
+- 图片展示
+- Prompt 复制
+- 收藏
+- 最近浏览
+- sitemap
+- robots
+- opengraph-image
+
+### 当前暂时降级
+- 基于 URL 参数的服务端搜索/排序联动
+
+也就是说，页面仍然能展示搜索输入体验，但当前这版主要目标是：
+
+**优先稳定部署到 Cloudflare。**
+
+后面如果你愿意，我可以继续把搜索/筛选改成纯前端静态站兼容方案。
+
+---
+
+## 五、部署成功后你要检查什么
+
+部署成功后，优先检查：
+
+```text
+/
+/category/portrait-photography/
+/p/convenience-store-neon-portrait-1/
+/robots.txt
+/sitemap.xml
+```
+
+如果这些都正常，说明 Cloudflare 静态部署已经成功。
+
+---
+
+## 六、如果后面要绑定正式域名
+
+Cloudflare Pages 项目里：
+
+- **自定义域**
+- **设置自定义域**
+
+绑定后，再回到环境变量，把：
+
+```text
+NEXT_PUBLIC_SITE_URL
+```
+
+改成你的正式域名，例如：
+
+```text
+https://gallery.xxx.com
+```
+
+然后重新部署一次。

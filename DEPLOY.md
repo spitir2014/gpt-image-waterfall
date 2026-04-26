@@ -8,7 +8,7 @@
 
 - 首页产品化分发
 - Prompt 瀑布流浏览
-- 分类 / 搜索 / 排序 / 标签发现
+- 分类 / 搜索 / 排序 / 标签发现（当前 Cloudflare 静态版中，搜索交互保留为演示输入体验）
 - 详情页承接与 Prompt 复制
 - 收藏与最近浏览（浏览器本地存储）
 - SEO 基础设施（metadata / sitemap / robots / OG image）
@@ -100,13 +100,18 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 
 ## Cloudflare 部署说明
 
-当前项目不是原生为 Cloudflare 适配的，如果要部署到 Cloudflare，建议先做一轮改造，包括：
+当前项目已经改造成 **Cloudflare Pages 静态导出版**，不再使用 `@cloudflare/next-on-pages`。
 
-- 增加 Cloudflare 兼容构建链路
-- 调整构建命令
-- 校验静态资源与动态路由兼容性
+在 Cloudflare 中文界面里，请使用：
 
-如果需要，我可以继续直接把当前项目改成 **Cloudflare 可部署版**。
+- 构建命令：`npm run build:data && npm run build`
+- 构建输出目录：`out`
+- 根目录：留空
+- 环境变量：`NEXT_PUBLIC_SITE_URL=https://你的-pages-域名.pages.dev`
+
+详细中文步骤见：
+
+- `CLOUDFLARE.md`
 
 ---
 
