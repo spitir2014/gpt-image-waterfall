@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "build:data": "node scripts/build-cases.mjs"
+    "build:data": "node scripts/build-cases.mjs",
+    "build:prod": "npm run build:data && npm run build",
+    "cf:install": "npm install -D @cloudflare/next-on-pages wrangler",
+    "cf:build": "npm run build:data && npx @cloudflare/next-on-pages",
+    "cf:preview": "npx wrangler pages dev .vercel/output/static"
   },
   "dependencies": {
     "next": "16.2.4",

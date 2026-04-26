@@ -156,8 +156,15 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 
 ## 后续可继续做的部署增强
 
-- Cloudflare 适配版构建
+- Cloudflare 完整适配版构建
 - Dockerfile
 - docker-compose
 - GitHub Actions 自动部署
 - Vercel / Cloudflare 一键部署说明
+
+## 版本发布
+
+当前建议首个公开版本：
+
+- `v0.1.0`
+- 发布说明草稿见：`docs/release-v0.1.0.md`

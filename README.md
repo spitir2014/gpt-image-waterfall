@@ -188,9 +188,19 @@ npm run build
   `https://github.com/spitir2014/gpt-image-waterfall`
 - 部署说明：
   见 `DEPLOY.md`
+- Cloudflare 部署准备：
+  见 `CLOUDFLARE.md`
+- 版本记录：
+  见 `CHANGELOG.md`
+- License：
+  见 `LICENSE`
 
 ---
 
 ## License
 
-本仓库用于基于原始开源内容进行产品化实验与前端实现，原始内容与素材请同时遵循来源仓库对应许可与说明。
+本仓库当前使用 **MIT License**。
+
+说明：
+- 本仓库代码部分按 MIT 开放
+- 原始内容与素材仍需同时遵循来源仓库对应许可与说明
