@@ -11,6 +11,7 @@
 - 分类页与详情页均已静态化
 - `robots.txt` / `sitemap.xml` / `opengraph-image` 也已兼容静态导出
 - 本地 `npm run build` 已验证通过
+- 如果云端构建环境没有 `../source-repo` 原始数据目录，会自动回退复用仓库内已有的 `src/data/cases.json`
 
 因此，Cloudflare 上**不再使用** `@cloudflare/next-on-pages`，直接按静态站点部署即可。
 
